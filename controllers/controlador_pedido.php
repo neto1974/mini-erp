@@ -1,13 +1,11 @@
 <?php
-// Incluindo o modelo
+
 require_once '../models/modelo_pedido.php';
 
-// Processando ações
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $_POST['acao'];
     
     if ($acao === 'comprar') {
-        // Depuração: logar dados recebidos
         error_log("Dados recebidos no POST de comprar: " . print_r($_POST, true));
         
         $id_variacao = isset($_POST['id_variacao']) ? (int)$_POST['id_variacao'] : 0;
