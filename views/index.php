@@ -1,19 +1,16 @@
 <?php
-// Incluindo dependências
+
 require_once '../models/modelo_produto.php';
 require_once '../models/modelo_pedido.php';
 require_once '../controllers/controlador_produto.php';
 require_once '../controllers/controlador_pedido.php';
 
-// Iniciando sessão
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Processando mensagens
 $mensagem = isset($_GET['mensagem']) ? urldecode($_GET['mensagem']) : '';
 
-// Carregando dados para edição
 $produto_editar = null;
 $variacoes_editar = [];
 if (isset($_GET['editar'])) {
@@ -21,14 +18,11 @@ if (isset($_GET['editar'])) {
     $variacoes_editar = obter_variacoes($_GET['editar']);
 }
 
-// Carregando produtos
 $produtos = listar_produtos();
 
-// Carregando carrinho
 $carrinho = isset($_SESSION['carrinho']) ? $_SESSION['carrinho'] : [];
 $totais = calcular_carrinho();
 
-// Verificando ações para rolagem
 $rolar_para_carrinho = isset($_GET['acao']) && $_GET['acao'] === 'comprar' && strpos($mensagem, 'Estoque insuficiente') === false;
 $rolar_para_produtos = isset($_GET['acao']) && $_GET['acao'] === 'finalizar' && strpos($mensagem, 'Erro') === false && strpos($mensagem, 'Carrinho vazio') === false;
 ?>
