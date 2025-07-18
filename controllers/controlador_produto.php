@@ -1,8 +1,7 @@
 <?php
-// Incluindo o modelo
+
 require_once '../models/modelo_produto.php';
 
-// Processando ações
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $_POST['acao'];
     if ($acao === 'cadastrar') {
