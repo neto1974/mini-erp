@@ -1,8 +1,6 @@
 <?php
-// Incluindo o modelo
 require_once '../models/modelo_cupom.php';
 
-// Processando ações
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $acao = $_POST['acao'];
     if ($acao === 'cadastrar') {
