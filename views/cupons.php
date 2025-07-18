@@ -1,15 +1,13 @@
 <?php
-// Incluindo dependências
+
 require_once '../models/modelo_cupom.php';
 require_once '../controllers/controlador_cupom.php';
 
-// Carregando dados para edição
 $cupom_editar = null;
 if (isset($_GET['editar'])) {
     $cupom_editar = obter_cupom($_GET['editar']);
 }
 
-// Carregando cupons
 $cupons = listar_cupons();
 ?>
 
@@ -27,7 +25,7 @@ $cupons = listar_cupons();
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Formulário de cadastro/edição -->
+        <!-- Formulário de cadastro Par edição -->
         <div class="card">
             <div class="card-header">
                 <h2><?php echo $cupom_editar ? 'Editar Cupom' : 'Cadastrar Cupom'; ?></h2>
