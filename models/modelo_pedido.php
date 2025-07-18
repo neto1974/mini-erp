@@ -1,14 +1,11 @@
 <?php
-// Incluindo dependências
 require_once '../config.php';
 require_once '../models/modelo_produto.php';
 
-// Iniciando sessão
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Função para adicionar ao carrinho
 function adicionar_ao_carrinho($id_variacao, $quantidade) {
     global $conexao_banco;
     
@@ -24,7 +21,6 @@ function adicionar_ao_carrinho($id_variacao, $quantidade) {
         return ['sucesso' => false, 'mensagem' => 'Quantidade inválida'];
     }
     
-    // Consultar variação e estoque
     $sql = "SELECT v.id_variacao, v.cor, v.tamanho, v.genero, v.tecido, v.preco, COALESCE(e.quantidade, 0) as quantidade, p.nome 
             FROM variacoes v 
             JOIN produtos p ON v.id_produto = p.id_produto 
@@ -66,14 +62,11 @@ function adicionar_ao_carrinho($id_variacao, $quantidade) {
     return ['sucesso' => true, 'mensagem' => 'Item adicionado ao carrinho'];
 }
 
-// Função para calcular carrinho
 function calcular_carrinho($codigo_cupom = null) {
     global $conexao_banco;
     
-    // Inicializando subtotal
     $subtotal = 0;
     
-    // Verificando se o carrinho existe
     if (!isset($_SESSION['carrinho']) || empty($_SESSION['carrinho'])) {
         $_SESSION['carrinho'] = [];
     } else {
@@ -108,7 +101,6 @@ function calcular_carrinho($codigo_cupom = null) {
     ];
 }
 
-// Função para finalizar pedido
 function finalizar_pedido($cep, $endereco_completo, $codigo_cupom = null) {
     global $conexao_banco;
     
@@ -120,7 +112,6 @@ function finalizar_pedido($cep, $endereco_completo, $codigo_cupom = null) {
         return ['sucesso' => false, 'mensagem' => 'Carrinho vazio'];
     }
     
-    // Criando pedido
     $sql = "INSERT INTO pedidos (subtotal, frete, cep, endereco_completo, status) 
             VALUES (?, ?, ?, ?, 'confirmado')";
     $stmt = $conexao_banco->prepare($sql);
@@ -128,7 +119,6 @@ function finalizar_pedido($cep, $endereco_completo, $codigo_cupom = null) {
     $stmt->execute();
     $id_pedido = $conexao_banco->insert_id;
     
-    // Adicionando itens do pedido
     foreach ($_SESSION['carrinho'] as $id_variacao => $item) {
         $sql_item = "INSERT INTO itens_pedido (id_pedido, id_variacao, quantidade, preco_unitario) 
                      VALUES (?, ?, ?, ?)";
@@ -143,7 +133,7 @@ function finalizar_pedido($cep, $endereco_completo, $codigo_cupom = null) {
         $stmt_estoque->execute();
     }
     
-    // Enviando e-mail (comentado para testes locais sem SMTP)
+    // Enviar e-mail (comentado para testes locais sem SMTP - leia README.md)
     /*
     $mensagem = "Pedido #$id_pedido\n\nItens:\n";
     foreach ($_SESSION['carrinho'] as $item) {
@@ -176,7 +166,6 @@ function finalizar_pedido($cep, $endereco_completo, $codigo_cupom = null) {
     }
     */
     
-    // Limpar carrinho
     $_SESSION['carrinho'] = [];
     
     return ['sucesso' => true, 'mensagem' => 'Pedido finalizado com sucesso!'];
